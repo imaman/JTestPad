@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Ignore;
 import org.junit.runner.Description;
+import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -35,6 +36,11 @@ public class TestBedRunner extends Runner {
          this.m = m;
          this.desc = desc;
       }
+      
+      @Override
+      public String toString() {
+         return m.toString();
+      }
    }
    
    public class Seq<T> 
@@ -55,6 +61,13 @@ public class TestBedRunner extends Runner {
          if(tail == null)
             return head;
          return tail.last();
+      }
+      
+      @Override
+      public String toString() {
+         if(tail == null)
+            return head.toString();
+         return head.toString() + ", " + tail;
       }
    }
 
@@ -186,23 +199,32 @@ public class TestBedRunner extends Runner {
 
    @Override
    public void run(RunNotifier rn) {
+
+      Result result = new Result();
+      rn.addFirstListener(result.createListener());
+      
+      rn.fireTestRunStarted(d);
       for (Case p : ps) {
          try {
             rn.fireTestStarted(p.desc);
             run(p, rn);
-            rn.fireTestFinished(p.desc);
          } catch (AssertionError e) {
             rn.fireTestFailure(new Failure(p.desc, e));
          } catch (InvocationTargetException e) {
             rn.fireTestFailure(new Failure(p.desc, e.getTargetException()));
          }
-         catch (Exception e) {
+         catch (Throwable e) {
             rn.fireTestFailure(new Failure(p.desc, e));
          }
+         finally {
+            rn.fireTestFinished(p.desc);
+         }
       }
+      
+      rn.fireTestRunFinished(result);
    }
 
-   private void run(Case p, RunNotifier rn) throws Exception {
+   private void run(Case p, RunNotifier rn) throws Throwable {
       Method m = p.m;
       Seq<Object> instances = instantiate(p.seq);
       Object oo = instances.head;
@@ -250,7 +272,7 @@ public class TestBedRunner extends Runner {
    }
 
    private void verifyNormalExecution(Method m, Object oo, TestBed<?> o, 
-      Seq<Object> instances) throws Exception 
+      Seq<Object> instances) throws Throwable 
    {
       Object actual = null;
       Throwable thrown = null;
@@ -270,6 +292,9 @@ public class TestBedRunner extends Runner {
          verifyException(m, oo, o, thrown);
          return;
       }
+      
+      if(thrown != null)
+         throw thrown;
       
       
       try {
