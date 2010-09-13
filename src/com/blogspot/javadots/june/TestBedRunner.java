@@ -1,6 +1,5 @@
 package com.blogspot.javadots.june;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -111,75 +111,26 @@ public class TestBedRunner extends Runner {
    }
 
    private Description newDescription(final Method m, final Seq<Class<?>> classes) {
-      String f = String.format("%s(%s)", m.getName(), m.getDeclaringClass().getName());
-      return new Description(f, (new Annotation[0]));
+      return Description.createTestDescription(m.getDeclaringClass(), m.getName());
    }
-
-//   private Description newDescription(final Class<?> c, final Seq<Class<?>> classes) {
-//      String name = nameOf(c);
-//      Annotation[] annotations = {};
-//      if (name.length() == 0)
-//      	throw new IllegalArgumentException("name must have non-zero length");
-//      return new Description(name, annotations) {
-//
-//         @Override
-//         public String getClassName() {
-//            return c.getName();
-//         }
-//
-//         @Override
-//         public Class<?> getTestClass() {
-//            return classes.last();
-//         }         
-//      };
-//   }
 
    private String nextOrdinal() {
       return "[" + ++n + "]";
    }
 
-   private List<String> decamel(String s) {
-      List<String> result = new ArrayList<String>();
-      int len = s.length();
-      boolean prevWasCapital = true;
-      StringBuilder current = new StringBuilder();
-      for (int i = 0; i < len; ++i) {
-         char c = s.charAt(i);
-         boolean isCapital = Character.isUpperCase(c);
-         if (isCapital && !prevWasCapital) {
-            result.add(current.toString());
-            current = new StringBuilder();
-         }
-
-         prevWasCapital = isCapital;
-
-         if (c == '_') {
-            result.add(current.toString());
-            current = new StringBuilder();
-            prevWasCapital = true;
-            continue;
-         }
-
-         current.append(c);
-      }
-
-      result.add(current.toString());
-      return result;
-   }
-
    protected String nameOf(Method m) {
       String name = m.getName();
-      return nextOrdinal() + " " + normalize(decamel(name));
+      return nextOrdinal() + " " + normalize(MessageBuilder.decamel(name));
    }
 
    
    protected String nameOf(Class<?> c) {
       String name = c.getSimpleName();
       if (!name.startsWith(prefix()))
-         return normalize(decamel(name));
+         return normalize(MessageBuilder.decamel(name));
 
       name = name.substring(prefix().length());
-      return "Feature: " + normalize(decamel(name));
+      return "Feature: " + normalize(MessageBuilder.decamel(name));
    }
 
    private String normalize(List<String> words) {
@@ -270,8 +221,8 @@ public class TestBedRunner extends Runner {
    private void verifyException(Method m, Object oo, TestBed<?> o, Throwable thrown) {
       Class<?> exceptionClass = (Class<?>) o.expected;
       if(thrown == null)
-         throw new AssertionError("Expected exception "
-            + exceptionClass.getName() + " but nothing was thrown");
+         throw new AssertionError(new MessageBuilder(m, "Expected exception "
+            + exceptionClass.getName() + " but nothing was thrown").message());
 
       if (exceptionClass.isAssignableFrom(thrown.getClass())) {
          if(o.exceptionMessage == null)
@@ -281,16 +232,18 @@ public class TestBedRunner extends Runner {
             return;
          
          
-         throw new AssertionError("Expected exception message "
-            + o.exceptionMessage + " but got " + thrown.getMessage());
+         throw new ComparisonFailure(new MessageBuilder(m, "Exception message mismatch").message(), 
+            o.exceptionMessage, thrown.getMessage());
             
       }
 
-      throw new AssertionError("Expected exception "
-         + exceptionClass.getName() + " but got " + thrown.getClass().getName());
+      throw new AssertionError(new MessageBuilder(m, "Expected exception "
+         + exceptionClass.getName() + " but got " + thrown.getClass().getName()).message());
    }
 
-   private void verifyNormalExecution(Method m, Object oo, TestBed<?> o, Seq<Object> instances) throws Exception {
+   private void verifyNormalExecution(Method m, Object oo, TestBed<?> o, 
+      Seq<Object> instances) throws Exception 
+   {
       Object actual = null;
       Throwable thrown = null;
       try {
@@ -312,7 +265,7 @@ public class TestBedRunner extends Runner {
       
       
       try {
-         Assert.assertEquals(o.expected, actual);
+         Assert.assertEquals(new MessageBuilder(m, "").message(), o.expected, actual);
       } catch (AssertionError e) {
          e.setStackTrace(getStackTrace(o));
          throw e;

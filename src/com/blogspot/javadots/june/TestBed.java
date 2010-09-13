@@ -32,7 +32,7 @@ public class TestBed<T> {
          TestBed.this.exceptionMessage = msg;         
       }
 
-      public<S extends T> S from(S t) {
+      public<S extends T> S on(S t) {
          tested = t.getClass();
          sut = t;
          
