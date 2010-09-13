@@ -21,7 +21,7 @@ public class SC3_Tests extends TestBed<SC3> {
          expect(3).on(new SC3("1,2"));
       }
       
-      void mantyCommaSeparatedValues() {
+      void manyCommaSeparatedValues() {
          expect(210).on(new SC3("10,20,30,40,50,60"));
       }
    }
