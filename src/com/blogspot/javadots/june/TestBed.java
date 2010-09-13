@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 public class TestBed<T> {
 
    @Test
-   public void f()
+   public void __some_very_stranGeName_43904mn239()
    {
       // Make sure plug-in sees subclasses as JUnit test classes
    }

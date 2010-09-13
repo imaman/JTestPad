@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.ComparisonFailure;
+import org.junit.Ignore;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -92,6 +93,9 @@ public class TestBedRunner extends Runner {
          if(m.getName().equals(stimulateMethodName()))
             continue;
          
+         if(m.isAnnotationPresent(Ignore.class))
+            continue;
+         
          m.setAccessible(true);
          if (Modifier.isPrivate(m.getModifiers()))
             continue;
@@ -103,6 +107,10 @@ public class TestBedRunner extends Runner {
 
       
       for(Class<?> childClass : c.getDeclaredClasses()) {
+         if(childClass.isAnnotationPresent(Ignore.class))
+            continue;
+         
+         
          Description newChild = process(seq.prepend(childClass));
          result.addChild(newChild);
       }
