@@ -33,7 +33,7 @@ public class TestBedRunner_Tests extends TestBed<TestBedRunner>
          }
          
          int theClassIsAnonymous() {
-            expect(2).on(new TestBedRunner(DefinesAnoynmousClass.class));
+            expect(1).on(new TestBedRunner(DefinesAnoynmousClass.class));
             Description d = sut.getDescription();
             return d.getChildren().size();
          }
