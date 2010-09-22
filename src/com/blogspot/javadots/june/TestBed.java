@@ -19,15 +19,18 @@ public class TestBed<T> {
    protected StackTraceElement[] trace;
    protected String exceptionMessage;
 
+   protected Recorder<?> recorder;
    
-   public class A 
+   public class Recorder<R> 
    {
+      Object actual;
+      private boolean hasActual = false;
 
-      public A(Object expected) {
+      public Recorder(Object expected) {
          this(expected, null);
       }
 
-      public A(Object expected, String msg) {
+      public Recorder(Object expected, String msg) {
          TestBed.this.expected = expected;
          TestBed.this.exceptionMessage = msg;         
       }
@@ -38,17 +41,36 @@ public class TestBed<T> {
          
          return t;
       }
+      
+      public<V extends R> void from(V actual) {
+    	  this.actual = actual;
+    	  hasActual = true;
+      }
+
+      public boolean hasActual() {
+         return hasActual;
+      }
    }
    
-   public A expect(Object expected) {
+
+   public Recorder<Object> expect(Class<? extends Throwable> t, String msg) {
       trace = new Exception().getStackTrace();
-      return new A(expected);
+      Recorder<Object> result = new Recorder<Object>(t, msg);
+      recorder = result;
+      return result;
    }
 
-   public A expect(Class<? extends Throwable> t, String msg) {
-      trace = new Exception().getStackTrace();
-      return new A(t, msg);
+   public Recorder<Object> expect(Class<? extends Throwable> t) {
+      return expect(t, null);
    }
+   
+   public<R> Recorder<R> expect(R expected) {
+      trace = new Exception().getStackTrace();
+      Recorder<R> result = new Recorder<R>(expected);
+      recorder = result;
+      return result;
+   }
+   
    
    public void problem(Exception e) {
       

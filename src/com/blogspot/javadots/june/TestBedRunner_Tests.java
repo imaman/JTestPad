@@ -26,7 +26,7 @@ public class TestBedRunner_Tests extends TestBed<TestBedRunner>
       }
       
       class shouldSkipOverWhen {
-         int aAclasIsTaggedWithIgnore() {
+         int aClassIsTaggedWithIgnore() {
             expect(1).on(new TestBedRunner(Sample_Tests.class));
             return sut.getDescription().getChildren().size();
          }
@@ -125,6 +125,61 @@ public class TestBedRunner_Tests extends TestBed<TestBedRunner>
             return "f:" + result.getFailures().get(0).getDescription().getMethodName() + ";count:" + result.getRunCount();
          }
       }
+      
+      class ShouldAllowFromExpections {
+          RunNotifier rn = new RunNotifier();
+          RunListener rl;
+          protected Description description;
+          protected Result result;
+          private int n;
+          private Class<?> target;
+          
+          
+          int stimulate() {
+        	 recorder.on(new TestBedRunner(target));
+             rn.addFirstListener(rl);
+             sut.run(rn);
+             return n;
+          }
+          
+          void fromFailure() {
+             expect(1);
+             target = FromFails.class;
+             rl = new RunListener()
+             {
+                @Override
+                public void testFailure(Failure failure) {
+                	++n;
+                }
+             };
+          }
+
+          void fromSucceeds() {
+              expect(0);
+              target = FromSucceeds.class;
+              rl = new RunListener()
+              {
+                 @Override
+                 public void testFailure(Failure failure) {
+                 	++n;
+                 }
+              };
+           }
+      }
+   }
+   
+   @Ignore
+   static class FromFails extends TestBed<Sample> {
+	   void f() {
+		   expect(0).from(1);
+	   }
+   }
+   
+   @Ignore
+   static class FromSucceeds extends TestBed<Sample> {
+	   void f() {
+		   expect(0).from(0);
+	   }
    }
    
    @Ignore

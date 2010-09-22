@@ -278,8 +278,12 @@ public class TestBedRunner extends Runner {
       Throwable thrown = null;
       try {
          actual = m.invoke(oo);
-         if(void.class.equals(m.getReturnType()))
-            actual = stimulate(instances);
+         if(void.class.equals(m.getReturnType())) {
+        	 if(o.recorder != null && o.recorder.hasActual())
+        		 actual = o.recorder.actual;
+        	 else
+        		 actual = stimulate(instances);
+         }
       }
       catch(InvocationTargetException e) {
          thrown = e.getTargetException();
