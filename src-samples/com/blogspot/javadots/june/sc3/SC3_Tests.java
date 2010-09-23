@@ -1,8 +1,8 @@
 package com.blogspot.javadots.june.sc3;
 
-import com.blogspot.javadots.june.TestBed;
+import com.blogspot.javadots.testpad.TestPad;
 
-public class SC3_Tests extends TestBed<SC3> {
+public class SC3_Tests extends TestPad<SC3> {
 
    int stimulate() {
       return sut.add();

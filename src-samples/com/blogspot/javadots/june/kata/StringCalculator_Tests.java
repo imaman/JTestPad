@@ -1,8 +1,8 @@
 package com.blogspot.javadots.june.kata;
 
-import com.blogspot.javadots.june.TestBed;
+import com.blogspot.javadots.testpad.TestPad;
 
-public class StringCalculator_Tests extends TestBed<StringCalculator>{
+public class StringCalculator_Tests extends TestPad<StringCalculator>{
 
    Object stimulate() {
       return sut.add();
