@@ -1,4 +1,4 @@
-package com.blogspot.javadots.testpad;
+package com.blogspot.javadots.jtestpad;
 
 import org.junit.Ignore;
 import org.junit.runner.Description;
@@ -8,36 +8,36 @@ import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 
 
-public class TestPadRunner_Tests extends TestPad<TestPadRunner>
+public class JTestPadRunner_Tests extends JTestPad<JTestPadRunner>
 {
    class IsA_TestRunner
    {
       class shouldDetectTestMethods_When
       {
          int theyAreDeclaredInsideNestedClasses() {
-            expect(2).on(new TestPadRunner(Sample_Tests.class));
+            expect(2).on(new JTestPadRunner(Sample_Tests.class));
             return sut.getDescription().getChildren().get(0).getChildren().size();
          }
          
          int theyAreAtTheTopLevel() {
-            expect(3).on(new TestPadRunner(A.class));
+            expect(3).on(new JTestPadRunner(A.class));
             return sut.getDescription().getChildren().size();
          }
       }
       
       class shouldSkipOverWhen {
          int aClassIsTaggedWithIgnore() {
-            expect(1).on(new TestPadRunner(Sample_Tests.class));
+            expect(1).on(new JTestPadRunner(Sample_Tests.class));
             return sut.getDescription().getChildren().size();
          }
          
          int aMethodIsTaggedWithIgnore() {
-            expect(1).on(new TestPadRunner(Ignoring.class));
+            expect(1).on(new JTestPadRunner(Ignoring.class));
             return sut.getDescription().getChildren().size();            
          }
          
          int theClassIsAnonymous() {
-            expect(1).on(new TestPadRunner(DefinesAnoynmousClass.class));
+            expect(1).on(new JTestPadRunner(DefinesAnoynmousClass.class));
             Description d = sut.getDescription();
             return d.getChildren().size();
          }
@@ -59,7 +59,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
          }
          
          void aTestIsFinishedEitherWithSuccessOrFailure() {
-            expect(2).on(new TestPadRunner(J.class));
+            expect(2).on(new JTestPadRunner(J.class));
             rl = new RunListener()
             {
                @Override
@@ -70,7 +70,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
          }
          
          void aTestIsStarting() {
-            expect(2).on(new TestPadRunner(J.class));
+            expect(2).on(new JTestPadRunner(J.class));
             rl = new RunListener()
             {
                @Override
@@ -81,7 +81,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
          }
          
          void aTestIsFaling() {
-            expect(1).on(new TestPadRunner(J.class));
+            expect(1).on(new JTestPadRunner(J.class));
             rl = new RunListener()
             {
                @Override
@@ -92,7 +92,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
          }
          
          String aTestStarts() {
-            expect(J.class.getSimpleName()).on(new TestPadRunner(J.class));
+            expect(J.class.getSimpleName()).on(new JTestPadRunner(J.class));
             rl = new RunListener() {
 
                @Override
@@ -109,7 +109,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
          }  
          
          String aTestFinishes() {
-            expect("f:failure;count:2").on(new TestPadRunner(J.class));
+            expect("f:failure;count:2").on(new JTestPadRunner(J.class));
             rl = new RunListener() {
 
                @Override
@@ -136,7 +136,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
           
           
           int stimulate() {
-        	 recorder.on(new TestPadRunner(target));
+        	 recorder.on(new JTestPadRunner(target));
              rn.addFirstListener(rl);
              sut.run(rn);
              return n;
@@ -169,21 +169,21 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
    }
    
    @Ignore
-   static class FromFails extends TestPad<Sample> {
+   static class FromFails extends JTestPad<Sample> {
 	   void f() {
 		   expect(0).from(1);
 	   }
    }
    
    @Ignore
-   static class FromSucceeds extends TestPad<Sample> {
+   static class FromSucceeds extends JTestPad<Sample> {
 	   void f() {
 		   expect(0).from(0);
 	   }
    }
    
    @Ignore
-   static class J extends TestPad<Sample>
+   static class J extends JTestPad<Sample>
    {
       int failure() {
          expect(0);
@@ -202,7 +202,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
       
    }
    
-   class Sample_Tests extends TestPad<Sample>
+   class Sample_Tests extends JTestPad<Sample>
    {
       class A {
          void f() { }
@@ -215,12 +215,12 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
       }
    }   
    
-   class Ignoring extends TestPad<Sample> {
+   class Ignoring extends JTestPad<Sample> {
       @Ignore void ignoreMe() { }
       void considerMe() { }
    }
    
-   class DefinesAnoynmousClass extends TestPad<Sample> {
+   class DefinesAnoynmousClass extends JTestPad<Sample> {
 
       void f() {
          new Cloneable() {
@@ -230,7 +230,7 @@ public class TestPadRunner_Tests extends TestPad<TestPadRunner>
       }
    }
    
-   class A extends TestPad<Sample>
+   class A extends JTestPad<Sample>
    {
       void x() { }
       void y() { }

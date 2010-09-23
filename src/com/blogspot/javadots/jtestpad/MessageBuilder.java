@@ -1,4 +1,4 @@
-package com.blogspot.javadots.testpad;
+package com.blogspot.javadots.jtestpad;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -25,7 +25,7 @@ public class MessageBuilder {
       for(Class<?> c = m.getDeclaringClass(); c != null; 
          c = c.getDeclaringClass())
       {
-         if(c.getSuperclass().equals(TestPad.class))
+         if(c.getSuperclass().equals(JTestPad.class))
             lifo.addFirst(nameOfTopLevelClass(c));
          else
             lifo.addFirst(decamel(c.getSimpleName()));

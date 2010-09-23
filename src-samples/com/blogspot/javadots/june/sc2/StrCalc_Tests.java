@@ -1,8 +1,8 @@
 package com.blogspot.javadots.june.sc2;
 
-import com.blogspot.javadots.testpad.TestPad;
+import com.blogspot.javadots.jtestpad.JTestPad;
 
-public class StrCalc_Tests extends TestPad<StrCalc>
+public class StrCalc_Tests extends JTestPad<StrCalc>
 {
 
    // Easily reuse stimulation code

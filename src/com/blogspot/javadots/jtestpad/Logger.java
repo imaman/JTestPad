@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.blogspot.javadots.testpad;
+package com.blogspot.javadots.jtestpad;
 
 import java.io.File;
 import java.io.FileWriter;

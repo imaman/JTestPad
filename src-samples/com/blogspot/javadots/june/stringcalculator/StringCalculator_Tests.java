@@ -1,8 +1,8 @@
 package com.blogspot.javadots.june.stringcalculator;
 
-import com.blogspot.javadots.testpad.TestPad;
+import com.blogspot.javadots.jtestpad.JTestPad;
 
-public class StringCalculator_Tests extends TestPad<StringCalculator> {
+public class StringCalculator_Tests extends JTestPad<StringCalculator> {
 
    protected Object stimulate() {
       return sut.add();

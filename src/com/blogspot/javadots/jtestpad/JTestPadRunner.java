@@ -1,4 +1,4 @@
-package com.blogspot.javadots.testpad;
+package com.blogspot.javadots.jtestpad;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 
-public class TestPadRunner extends Runner {
+public class JTestPadRunner extends Runner {
    
    private static int n = 0;
 
@@ -89,7 +89,7 @@ public class TestPadRunner extends Runner {
       translations.put("ten", "10");
    }
 
-   public TestPadRunner(Class<?> cls) {
+   public JTestPadRunner(Class<?> cls) {
       initTranslations();
       Seq<Class<?>> seq = new Seq<Class<?>>(cls, null);
       d = process(seq);
@@ -232,7 +232,7 @@ public class TestPadRunner extends Runner {
       for(Seq<Object> temp = instances; temp != null; temp = temp.tail)
          o = temp.head;
             
-      verifyNormalExecution(m, oo, (TestPad<?>) o, instances);
+      verifyNormalExecution(m, oo, (JTestPad<?>) o, instances);
    }
 
    private Seq<Object> instantiate(Seq<Class<?>> seq) throws Exception {
@@ -248,7 +248,7 @@ public class TestPadRunner extends Runner {
       
    }
 
-   private void verifyException(Method m, Object oo, TestPad<?> o, Throwable thrown) {
+   private void verifyException(Method m, Object oo, JTestPad<?> o, Throwable thrown) {
       Class<?> exceptionClass = (Class<?>) o.expected;
       if(thrown == null)
          throw new AssertionError(new MessageBuilder(m, "Expected exception "
@@ -271,7 +271,7 @@ public class TestPadRunner extends Runner {
          + exceptionClass.getName() + " but got " + thrown.getClass().getName()).message());
    }
 
-   private void verifyNormalExecution(Method m, Object oo, TestPad<?> o, 
+   private void verifyNormalExecution(Method m, Object oo, JTestPad<?> o, 
       Seq<Object> instances) throws Throwable 
    {
       Object actual = null;
@@ -342,7 +342,7 @@ public class TestPadRunner extends Runner {
       return "stimulate";
    }
 
-   private StackTraceElement[] getStackTrace(TestPad<?> o) {
+   private StackTraceElement[] getStackTrace(JTestPad<?> o) {
       StackTraceElement[] arr = new StackTraceElement[o.trace.length - 1];
       for (int i = 0; i < arr.length; ++i)
          arr[i] = o.trace[i + 1];

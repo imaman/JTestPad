@@ -1,10 +1,10 @@
-package com.blogspot.javadots.testpad;
+package com.blogspot.javadots.jtestpad;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(TestPadRunner.class)
-public class TestPad<T> {
+@RunWith(JTestPadRunner.class)
+public class JTestPad<T> {
 
    @Test
    public void __some_very_stranGeName_43904mn239()
@@ -31,8 +31,8 @@ public class TestPad<T> {
       }
 
       public Recorder(Object expected, String msg) {
-         TestPad.this.expected = expected;
-         TestPad.this.exceptionMessage = msg;         
+         JTestPad.this.expected = expected;
+         JTestPad.this.exceptionMessage = msg;         
       }
 
       public<S extends T> S on(S t) {

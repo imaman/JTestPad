@@ -1,9 +1,9 @@
 package com.blogspot.javadots.june.money;
 
-import com.blogspot.javadots.testpad.TestPad;
+import com.blogspot.javadots.jtestpad.JTestPad;
 
 
-public class Money_Tests extends TestPad<Money> {
+public class Money_Tests extends JTestPad<Money> {
 
    class Feature_ToString 
    {
