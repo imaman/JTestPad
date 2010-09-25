@@ -1,5 +1,6 @@
 package com.blogspot.javadots.jtestpad;
 
+import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -67,6 +68,13 @@ public class JTestPad<T> {
    public<R> Recorder<R> expect(R expected) {
       trace = new Exception().getStackTrace();
       Recorder<R> result = new Recorder<R>(expected);
+      recorder = result;
+      return result;
+   }
+   
+   public<R> Recorder<R> expectThat(Matcher<R> m) {
+      trace = new Exception().getStackTrace();
+      Recorder<R> result = new Recorder<R>(m);
       recorder = result;
       return result;
    }

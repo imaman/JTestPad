@@ -4,10 +4,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MessageBuilder {
+   private final List<String> prefix;
    public Method m;
    public String s;
    private StringBuilder sb = new StringBuilder();
@@ -17,6 +20,10 @@ public class MessageBuilder {
    List<Object> x = new ArrayList<Object>();
 
    public MessageBuilder(Method m, String s) {
+      this(m, s, Arrays.asList("Behavior", "of"));
+   }
+   public MessageBuilder(Method m, String s, List<String> prefix) {
+      this.prefix = prefix;
       this.m = m;
       this.s = s;
       LinkedList<List<String>> lifo = new LinkedList<List<String>>();
@@ -48,8 +55,7 @@ public class MessageBuilder {
          return decamel(c.getSimpleName());
       
       List<String> result = new ArrayList<String>();
-      result.add("Behavior");
-      result.add("of");
+      result.addAll(prefix);
 
       Class<?> testee = (Class<?>) t;
       result.add(testee.getSimpleName());

@@ -49,6 +49,7 @@ public class StringCalculator {
       listeners.add(listener);
    }
    
+   @Override
    public String toString() {
       return input;
    }

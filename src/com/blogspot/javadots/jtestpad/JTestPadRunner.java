@@ -5,10 +5,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Ignore;
@@ -214,7 +216,15 @@ public class JTestPadRunner extends Runner {
             rn.fireTestFailure(new Failure(p.desc, e.getTargetException()));
          }
          catch (Throwable e) {
-            rn.fireTestFailure(new Failure(p.desc, e));
+            MessageBuilder mb = new MessageBuilder(p.m, e.getMessage(), 
+               Arrays.asList("'" + e.getClass().getName() + "'", "emitted", "by:"));
+            
+            String s = mb.message();
+            
+            RuntimeException re = new RuntimeException(s);
+            re.setStackTrace(e.getStackTrace());
+             
+            rn.fireTestFailure(new Failure(p.desc, re));
          }
          finally {
             rn.fireTestFinished(p.desc);
@@ -302,11 +312,20 @@ public class JTestPadRunner extends Runner {
       
       
       try {
-         Assert.assertEquals(new MessageBuilder(m, "").message(), o.expected, actual);
+         applyAssertion(m, o, actual);            
       } catch (AssertionError e) {
          e.setStackTrace(getStackTrace(o));
          throw e;
       }
+   }
+
+   @SuppressWarnings("unchecked")
+   private void applyAssertion(Method m, JTestPad<?> o, Object actual) {
+      String message = new MessageBuilder(m, "").message();
+      if(o.expected instanceof Matcher<?>)
+         Assert.assertThat(message, actual, (Matcher<Object>) o.expected);
+      else
+         Assert.assertEquals(message, o.expected, actual);
    }
    
    private Method findMethod(Class<?> c, String name) {
