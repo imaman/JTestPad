@@ -28,6 +28,7 @@ public class Money {
       return new Money(amount - amount_, cents - cents_, currency);
    }
    
+   @Override
    public String toString() {
       return currency + amount + "." + (cents < 10 ? "0" : "") + cents
       ;
